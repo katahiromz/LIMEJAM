@@ -10,7 +10,7 @@ void version(void)
 
 void usage(void)
 {
-    puts("LIMEJAM --- Shuffle the lines in an ASCII/UTF-8 text file\n"
+    puts("LIMEJAM --- Shuffle lines in ASCII/UTF-8 text file\n"
          "\n"
          "Usage: LIMEJAM [OPTIONS] your_file.txt\n"
          "\n"

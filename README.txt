@@ -1,4 +1,4 @@
-# LIMEJAM ― Shuffle the lines in an ASCII/UTF-8 text file
+# LIMEJAM ― Shuffle lines in ASCII/UTF-8 text file
 
 Usage: LIMEJAM [OPTIONS] your_file.txt
 
