@@ -5,7 +5,7 @@
 
 void version(void)
 {
-    puts("LIMEJAM Version 1.0 by katahiromz");
+    puts("LIMEJAM Version 1.1 by katahiromz");
 }
 
 void usage(void)
@@ -74,7 +74,7 @@ int LIMEJAM_output(const char *filename, size_t count, char **pptr, int has_bom,
     fout = fopen(filename, "w");
     if (!fout)
     {
-        fprintf(stderr, "LIMEJAM ERROR: Cannot write file '%s'\n", filename);
+        fprintf(stderr, "LIMEJAM Error: Cannot write file '%s'\n", filename);
         return 1;
     }
 
@@ -115,7 +115,7 @@ int LIMEJAM_main(const char *filename, int just_sort, int keep_first_line)
     fin = fopen(filename, "r");
     if (!fin)
     {
-        fprintf(stderr, "LIMEJAM ERROR: Cannot open file '%s'\n", filename);
+        fprintf(stderr, "LIMEJAM Error: Cannot open file '%s'\n", filename);
         return 1;
     }
 
@@ -123,7 +123,15 @@ int LIMEJAM_main(const char *filename, int just_sort, int keep_first_line)
     {
         has_bom = (memcmp(&bom, "\xEF\xBB\xBF", 3) == 0);
         if (!has_bom)
+        {
+            if (!bom[0] || !bom[1] || !bom[2])
+            {
+                fclose(fin);
+                fprintf(stderr, "LIMEJAM Error: UTF-16 and UTF-32 are not supported yet: '%s'\n", filename);
+                return 1;
+            }
             fseek(fin, 0, SEEK_SET);
+        }
     }
 
     while (fgets(s_buf, sizeof(s_buf), fin))
@@ -136,7 +144,7 @@ int LIMEJAM_main(const char *filename, int just_sort, int keep_first_line)
         new_pptr = LIMEJAM_add(&count, pptr, s_buf);
         if (!new_pptr)
         {
-            fprintf(stderr, "LIMEJAM ERROR: Out of memory\n");
+            fprintf(stderr, "LIMEJAM Error: Out of memory\n");
             fclose(fin);
             return 1;
         }
@@ -156,7 +164,7 @@ int LIMEJAM_main(const char *filename, int just_sort, int keep_first_line)
     jammer = (size_t *)malloc(count * sizeof(size_t));
     if (!jammer)
     {
-        fprintf(stderr, "LIMEJAM ERROR: Out of memory\n");
+        fprintf(stderr, "LIMEJAM Error: Out of memory\n");
         LIMEJAM_free(&count, pptr);
         return 1;
     }
@@ -218,7 +226,7 @@ int main(int argc, char **argv)
         }
         if (arg[0] == '-')
         {
-            fprintf(stderr, "LIMEJAM ERROR: Invalid option '%s'\n", arg);
+            fprintf(stderr, "LIMEJAM Error: Invalid option '%s'\n", arg);
             return 1;
         }
         if (!filename)
@@ -226,7 +234,7 @@ int main(int argc, char **argv)
             filename = arg;
             continue;
         }
-        fprintf(stderr, "LIMEJAM ERROR: Too many arguments\n");
+        fprintf(stderr, "LIMEJAM Error: Too many arguments\n");
         return 1;
     }
 
