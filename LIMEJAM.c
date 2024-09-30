@@ -5,7 +5,7 @@
 
 void version(void)
 {
-    puts("LIMEJAM Version 1.1 by katahiromz");
+    puts("LIMEJAM Version 1.2 by katahiromz");
 }
 
 void usage(void)
@@ -158,7 +158,7 @@ int LIMEJAM_main(const char *filename, int just_sort, int keep_first_line)
         qsort(pptr, count, sizeof(char *), LIMEJAM_compare_line);
         ret = LIMEJAM_output(filename, count, pptr, has_bom, NULL);
         LIMEJAM_free(&count, pptr);
-        return ret;
+        return ret ? 0 : 1;
     }
 
     jammer = (size_t *)malloc(count * sizeof(size_t));
@@ -187,7 +187,7 @@ int LIMEJAM_main(const char *filename, int just_sort, int keep_first_line)
     ret = LIMEJAM_output(filename, count, pptr, has_bom, jammer);
     free(jammer);
     LIMEJAM_free(&count, pptr);
-    return ret;
+    return ret ? 0 : 1;
 }
 
 int main(int argc, char **argv)
