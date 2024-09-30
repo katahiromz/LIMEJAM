@@ -5,7 +5,7 @@
 
 void version(void)
 {
-    puts("LIMEJAM Version 1.3 by katahiromz");
+    puts("LIMEJAM Version 1.4 by katahiromz");
 }
 
 void usage(void)
@@ -81,6 +81,12 @@ int LIMEJAM_output(const char *filename, size_t count, char **pptr, int has_bom,
     if (has_bom)
         fprintf(fout, "\xEF\xBB\xBF");
 
+    if (count == 0 || pptr == NULL)
+    {
+        fclose(fout);
+        return 0;
+    }
+
     if (jammer)
     {
         for (i = 0; i < count; ++i)
@@ -155,7 +161,8 @@ int LIMEJAM_main(const char *filename, int just_sort, int keep_first_line)
 
     if (just_sort)
     {
-        qsort(&pptr[keep_first_line], count - keep_first_line, sizeof(char *), LIMEJAM_compare_line);
+        if (count > 0)
+            qsort(&pptr[keep_first_line], count - keep_first_line, sizeof(char *), LIMEJAM_compare_line);
         ret = LIMEJAM_output(filename, count, pptr, has_bom, NULL);
         LIMEJAM_free(&count, pptr);
         return ret ? 0 : 1;
@@ -175,13 +182,16 @@ int LIMEJAM_main(const char *filename, int just_sort, int keep_first_line)
     }
 
     /* Random shuffle */
-    srand(time(NULL) + count + seed);
-    for (i = count - 1; i > (size_t)keep_first_line; --i)
+    if (count > 0)
     {
-        j = rand() % (i + 1 - keep_first_line) + keep_first_line;
-        tmp = jammer[i];
-        jammer[i] = jammer[j];
-        jammer[j] = tmp;
+        srand(time(NULL) + count + seed);
+        for (i = count - 1; i > (size_t)keep_first_line; --i)
+        {
+            j = rand() % (i + 1 - keep_first_line) + keep_first_line;
+            tmp = jammer[i];
+            jammer[i] = jammer[j];
+            jammer[j] = tmp;
+        }
     }
 
     ret = LIMEJAM_output(filename, count, pptr, has_bom, jammer);
