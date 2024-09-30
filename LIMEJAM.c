@@ -5,7 +5,7 @@
 
 void version(void)
 {
-    puts("LIMEJAM Version 1.2 by katahiromz");
+    puts("LIMEJAM Version 1.3 by katahiromz");
 }
 
 void usage(void)
@@ -155,7 +155,7 @@ int LIMEJAM_main(const char *filename, int just_sort, int keep_first_line)
 
     if (just_sort)
     {
-        qsort(pptr, count, sizeof(char *), LIMEJAM_compare_line);
+        qsort(&pptr[keep_first_line], count - keep_first_line, sizeof(char *), LIMEJAM_compare_line);
         ret = LIMEJAM_output(filename, count, pptr, has_bom, NULL);
         LIMEJAM_free(&count, pptr);
         return ret ? 0 : 1;
